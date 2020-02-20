@@ -32,14 +32,21 @@ class LarapexChart
     protected $stroke;
     private $chartLetters = 'abcdefghijklmnopqrstuvwxyz';
     protected $toolbar;
+    protected $zoom;
     protected $dataLabels;
+    protected $shadow;
+    protected $annotations;
     public function __construct()
     {
         $this->id = substr(str_shuffle(str_repeat($x = $this->chartLetters, ceil(25 / strlen($x)))), 1, 25);
         $this->horizontal = json_encode(['horizontal' => false]);
         $this->colors = json_encode(config('larapex-charts.colors'));
         $this->setXAxis([]);
-        $this->grid = json_encode(['show' => false]);
+        $this->shadow([]);
+        $this->grid([]);
+        $this->stroke([]);
+        $this->annotations([]);
+        $this->zoom = json_encode(['enabled' => true]);
         $this->toolbar = json_encode(['show' => true]);
         $this->dataLabels = json_encode(['enabled' => true]);
         return $this;
@@ -100,9 +107,15 @@ class LarapexChart
         return $this;
     }
 
-    public function setGrid(bool $show)
+    public function setShadow(array $options)
     {
-        $this->grid = json_encode(['show' => $show]);
+        $this->shadow = json_encode($options);
+        return $this;
+    }
+
+    public function setGrid(array $options)
+    {
+        $this->grid = json_encode($options);
         return $this;
     }
 
@@ -112,19 +125,27 @@ class LarapexChart
         return $this;
     }
 
+    public function setZoom(bool $enabled)
+    {
+        $this->zoom = json_encode(['enabled' => $enabled]);
+        return $this;
+    }
+
     public function setdataLabels(bool $enabled)
     {
         $this->dataLabels = json_encode(['enabled' => $enabled]);
         return $this;
     }
 
-    public function setStroke(int $width, array $colors = ['#fff'])
+    public function setStroke(array $options)
     {
-        $this->stroke = json_encode([
-            'show'    =>  true,
-            'width'   =>  $width,
-            'colors'  =>  $colors
-        ]);
+        $this->stroke = json_encode($options);
+        return $this;
+    }
+
+    public function setAnnotations(array $options)
+    {
+        $this->annotations = json_encode($options);
         return $this;
     }
 
@@ -143,9 +164,6 @@ class LarapexChart
 
     public function script()
     {
-        if ($this->stroke) {
-            return View::make('larapex-charts::chart.script-with-stroke', ['chart' => $this]);
-        }
         return View::make('larapex-charts::chart.script', ['chart' => $this]);
     }
 
@@ -243,11 +261,19 @@ class LarapexChart
     }
 
     /**
-     * @return false|string
+     * @return array
      */
     public function grid()
     {
         return $this->grid;
+    }
+
+    /**
+     * @return array
+     */
+    public function annotations()
+    {
+        return $this->annotations;
     }
 
     /**
@@ -261,6 +287,14 @@ class LarapexChart
     /**
      * @return true|boolean
      */
+    public function zoom()
+    {
+        return $this->zoom;
+    }
+
+    /**
+     * @return true|boolean
+     */
     public function dataLabels()
     {
         return $this->dataLabels;
@@ -268,6 +302,14 @@ class LarapexChart
 
     /**
      * @return mixed
+     */
+    public function shadow()
+    {
+        return $this->shadow;
+    }
+
+    /**
+     * @return array
      */
     public function stroke()
     {

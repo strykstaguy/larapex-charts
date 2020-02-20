@@ -4,7 +4,9 @@
         chart: {
             type: '{!! $chart->type() !!}',
             height: {!! $chart->height() !!},
-            toolbar: {!! $chart->toolbar() !!}
+            toolbar: {!! $chart->toolbar() !!},
+            dropShadow: {!! $chart->shadow() !!},
+            zoom: {!! $chart->zoom() !!}
         },
         plotOptions: {
             bar: {!! $chart->horizontal() !!}
@@ -24,6 +26,11 @@
             categories: {!! $chart->xAxis() !!}
         },
         grid: {!! $chart->grid() !!},
+        @if($chart->stroke())
+            stroke: {!! $chart->stroke() !!},
+        @endif
+        annotations: {!! $chart->annotations() !!},
+
     }
 
     var chart = new ApexCharts(document.querySelector("#{!! $chart->id() !!}"), options);
