@@ -1,6 +1,7 @@
 <?php namespace ArielMejiaDev\LarapexCharts;
 
 use Illuminate\Support\Facades\View;
+use phpDocumentor\Reflection\Types\Boolean;
 
 class LarapexChart
 {
@@ -30,7 +31,8 @@ class LarapexChart
     protected $grid;
     protected $stroke;
     private $chartLetters = 'abcdefghijklmnopqrstuvwxyz';
-
+    protected $toolbar;
+    protected $dataLabels;
     public function __construct()
     {
         $this->id = substr(str_shuffle(str_repeat($x = $this->chartLetters, ceil(25 / strlen($x)))), 1, 25);
@@ -38,6 +40,8 @@ class LarapexChart
         $this->colors = json_encode(config('larapex-charts.colors'));
         $this->setXAxis([]);
         $this->grid = json_encode(['show' => false]);
+        $this->toolbar = json_encode(['show' => true]);
+        $this->dataLabels = json_encode(['enabled' => true]);
         return $this;
     }
 
@@ -99,6 +103,18 @@ class LarapexChart
     public function setGrid(bool $show)
     {
         $this->grid = json_encode(['show' => $show]);
+        return $this;
+    }
+
+    public function setToolbar(bool $show)
+    {
+        $this->toolbar = json_encode(['show' => $show]);
+        return $this;
+    }
+
+    public function setdataLabels(bool $enabled)
+    {
+        $this->dataLabels = json_encode(['enabled' => $enabled]);
         return $this;
     }
 
@@ -232,6 +248,22 @@ class LarapexChart
     public function grid()
     {
         return $this->grid;
+    }
+
+    /**
+     * @return true|boolean
+     */
+    public function toolbar()
+    {
+        return $this->toolbar;
+    }
+
+    /**
+     * @return true|boolean
+     */
+    public function dataLabels()
+    {
+        return $this->dataLabels;
     }
 
     /**

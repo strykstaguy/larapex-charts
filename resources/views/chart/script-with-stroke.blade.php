@@ -3,16 +3,15 @@
     {
         chart: {
             type: '{!! $chart->type() !!}',
-            height: {!! $chart->height() !!}
+            height: {!! $chart->height() !!},
+            toolbar: {!! $chart->toolbar() !!}
         },
         plotOptions: {
             bar: {!! $chart->horizontal() !!}
         },
         colors: {!! $chart->colors() !!},
         series: {!! $chart->dataset() !!},
-        dataLabels: {
-            enabled: false
-        },
+        dataLabels: {!! $chart->dataLabels() !!},
         labels: [{!! $chart->labels() !!}],
         title: {
             text: "{!! $chart->title() !!}"
